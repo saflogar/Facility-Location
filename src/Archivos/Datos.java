@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +23,8 @@ public class Datos {
     //Matriz de NF X NC que almacena el costo de la conexion entre facilidad y cliente
     private int [][] c;
     private int[] f;
+
+ 
 
     
     public Datos(File fName) throws FileNotFoundException
@@ -53,6 +53,21 @@ public class Datos {
               
             }
     
+    }
+       public int[][] getC() {
+        return c;
+    }
+
+    public void setC(int[][] c) {
+        this.c = c;
+    }
+
+    public int[] getF() {
+        return f;
+    }
+
+    public void setF(int[] f) {
+        this.f = f;
     }
     
     
