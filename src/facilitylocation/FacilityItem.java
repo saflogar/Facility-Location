@@ -10,6 +10,7 @@ package facilitylocation;
  *
  * @author sergio
  */
-public class FacilityItem {
+public abstract class FacilityItem {
+    
     
 }

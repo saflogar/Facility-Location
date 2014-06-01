@@ -6,46 +6,144 @@
 
 package facilitylocation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import Archivos.Datos;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author sergio
  */
 public class FacilityLocation {
-     int time;
-     List<Facility> facilityList;
-     List<Client> clientList;
-     Map connected;
+   
      
-
+     String path;
+     Scanner pathScan;
+     Datos datos;
+     int time ;
      
-    //Lista que almacenara el conjunto de facilidades potenciales y su costo
-    
+     Client[] clientArr;
+     Facility[] facilityArr;
+     int [][] costosConArr;
+     int [][] conexion;
+    boolean firstConection;
     public static void main(String[] args) {
-        
-        // TODO code application logic here
-        FacilityLocation solver = new FacilityLocation();
+      FacilityLocation fl = new FacilityLocation();
+      
+      fl.imprimirResultado();
     }
-
-    public FacilityLocation() 
+    
+    public FacilityLocation ()
     {
-     
-        connected = new HashMap<>();
-        facilityList = new ArrayList<>();
-        clientList = new ArrayList<>();
-        time = 0;
-        
-        facilityList.add(new Facility(20));
-        facilityList.add(new Facility(12));
-        clientList.add(new Client());
-        clientList.add(new Client());
+         try {
+             time = 0;
+             pathScan = new Scanner(System.in);
+             path = pathScan.nextLine();
+             datos = new Datos(new File(path));
+             
+             facilityArr = datos.getF();
+             costosConArr = datos.getC();
+             conexion= new int[datos.getNC()][datos.getNF()];
+             clientArr = new Client[datos.getNC()];
+             
+             for (int i = 0; i < datos.getNC(); i++) {
+                 clientArr[i] = new Client();
+             }
+             
+             for (int i = 0; i < datos.getNF(); i++) {
+                 for (int j = 0; j < datos.getNC(); j++) {
+                     conexion[i][j]=0;
+                     
+                     
+                 }
+             }
+             
+             int totalBid;
+             while (time < 100)
+      {
+          
+          for (int i = 0; i < facilityArr.length; i++) //inicia for de facilities
+          {
+              totalBid = 0;
+              for (int j = 0; j < clientArr.length; j++) //inicia for de clients
+              {
+                  
+                      
+                      clientArr[j].setBid(calcBid(i,j));
+                      totalBid = clientArr[j].getBid();
+                      if (clientArr[j].getBudget() == facilityArr[j].getCost() && facilityArr[i].isOpen())
+                      {
+                          conexion[i][j] = 1;
+                      }
+                  
+              }// fin de for clients
+             
+              if (totalBid == facilityArr[i].getCost())
+              {
+                  facilityArr[i].setOpen(true);
+                  for (int j = 0; j < clientArr.length; j++) 
+                  {
+                      if(clientArr[j].getBid()>0)
+                      {
+                          conexion[i][j] = 1;
+                          
+                      }
+                      
+                  }
+              }
+              
+              
+              
+              
+          }// fin for de facilities
+          time++;
+      }
+             
+             
+         } catch (FileNotFoundException ex) {
+             Logger.getLogger(FacilityLocation.class.getName()).log(Level.SEVERE, null, ex);
+         }
         
     }
     
+    public int calcBid(int i, int j)
+    {
+        int bid;
+        if (conexion[i][j] == 0)
+                  {
+                     
+                    bid = clientArr[j].getBudget() - costosConArr[i][j];
+                    clientArr[j].setBudget(clientArr[j].getBudget()+1);
+                    return bid;
+                  }
+                  else
+                  {
+                      bid = clientArr[j].getBid() - costosConArr[i][j];
+                      return bid;
+                  }
+    
+    }
+    
+    public void imprimirResultado()
+    {
+        
+        for (int i = 0; i < datos.getNF(); i++) {
+            System.out.print("[");
+            for (int j = 0; j < datos.getNC(); j++) {
+                System.out.print(conexion[i][j]);
+                
+            }
+            System.out.println("]");
+            
+        }
+    
+    
+    }
+
+  
     
     
     

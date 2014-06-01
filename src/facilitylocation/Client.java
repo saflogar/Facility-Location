@@ -16,11 +16,24 @@ public class Client {
     private boolean connected;
     private int budget;
     private int connectionCost;
+    private int bid;
+    
+    
     
     public Client()
     {
         connected = false;
+        budget = 0;
     
+    }
+    
+    public int getBid() {
+        
+        return bid;
+    }
+
+    public void setBid(int bid) {
+        this.bid = bid;
     }
 
     public boolean isConnected() {
