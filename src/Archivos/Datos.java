@@ -50,7 +50,7 @@ public class Datos {
             {
                f[i] = new Facility(line.nextInt());
                 
-                System.out.println("f["+i+"] ="+f[i]);
+                System.out.println("f["+i+"] ="+f[i].getCost());
             }
             
             
